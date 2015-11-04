@@ -40,11 +40,15 @@ void Location::init(void)
 	pthread_t p;
 	if(pthread_create(&p, NULL, run, this) == -1)
 	{
+		#if TEST
 		debug("create location error");
+		#endif
 	}
 	else
 	{
+		#if TEST
 		debug("create location success");
+		#endif
 	}
 }
 
@@ -59,7 +63,9 @@ Location::~Location()
 
 void* Location::run(void *arg)
 {
+	#if TEST
 	debug("location thread is working");
+	#endif
 	Location *thislo = (Location*)arg;
 	int id = 0;
     string rssi = "";
@@ -76,7 +82,9 @@ void* Location::run(void *arg)
         pair<int,int> ret = thislo->Locating(rssi);
 
         //定位结果
+        #if TEST
         debug("after locate");
+        #endif
         (thislo->msgQueue)->finishLoc(id,make_tuple(ret.first,ret.second,2));
         
         //测试定位时间

@@ -49,7 +49,7 @@ typedef struct GraphMatrix   //µØÍ¼¾ØÕó
 {
 	int matrix[N][M];
     vector<int> g_num;
-	int node_num;
+	int louti_num;
 	int edge_num;
 }Graph;
 
@@ -106,10 +106,7 @@ public:
 
 private:
 	MsgQueue *msgQueue;
-
-	int startPoint_index;   //开始节点
-	int endPoint_index;     //目的节点
-
+	
 	map<int, int> parent;  //父节点，及可扩展节点
 	map<int, int> dist;   //距离
 

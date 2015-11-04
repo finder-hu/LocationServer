@@ -161,29 +161,35 @@ starnode* Guide::findMinNode2EndInOpen(starnode* eNode){   //±éÀúopen±í¡�
 	return result;
 }
 
-bool Guide::checkPath(node curnode, starnode* parentNode,starnode* eNode){   //Ñ°Â·¡£Èç¹ûÏÖÔÚµÄ½ÚµãÔÚclose±íÖÐ£¬Ôò½áÊø£¬Èç¹û²»ÔÚ
+bool Guide::checkPath(node curnode, starnode* parentNode,starnode* eNode)
+{   //寻路。如果现在的节点在close表中，则结束，如果不在
 	//printf("enter checkPath\n");
 
 	int curnodeid = curnode.m_index;
-	if(isInCloseVec(curnodeid)){
+	if(isInCloseVec(curnodeid))
+	{
 		return false;
 	}
-   if(isInOpenVec(curnodeid)){// ¸üÐÂ
+   if(isInOpenVec(curnodeid))
+   {// 更新
 		//if(parentNode->g+)
 	   starnode* tmp = isInOpenVec(curnodeid);
-       double newg = parentNode->g+newedge[g.matrix[parentNode->nodeid][tmp->nodeid]].edgeweightid;  //¸¸½ÚµãµÄG¼ÓÉÏ¸¸½Úµãµ½ÏÖÔÚopen±í½ÚµãµÄG
-	   if(newg < tmp->g){
-		   tmp->parent = parentNode;       //¸üÐÂ¸¸½Úµã£¬¸üÐÂf
+       double newg = parentNode->g+newedge[g.matrix[parentNode->nodeid][tmp->nodeid]].edgeweightid;  //父节点的G加上父节点到现在open表节点的G
+	   if(newg < tmp->g)
+	   {
+		   tmp->parent = parentNode;       //更新父节点，更新f
 		   parent[tmp->nodeid] = parentNode->nodeid;
 		   tmp->g = newg;
 		   tmp->h = distanceFromA2B(tmp,eNode);
 		   tmp->f = tmp->g+tmp->h;
-		   dist[tmp->nodeid] = tmp->f;  //ÏÖÔÚ½ÚµãµÄ¾àÀë
+		   dist[tmp->nodeid] = tmp->f;  //现在节点的距离
 	   }
 	    //printf("%d is in v_open g = %d\n",curnodeid, tmp->g);
-	}else {   //²»ÔÚopen±íÀïÃæ£¬¶¨Òå¸¸½Úµã£¬g£¬h,f,²¢¼ÓÈëopen±íÖÐ
-		// Ìí¼Óµ½¿ªÆôÁÐ±í
-		starnode* tmpnode = new starnode(curnodeid,curnode.position_x,curnode.position_y);
+	}
+	else
+	{   //不在open表里面，定义父节点，g，h,f,并加入open表中
+		// 添加到开启列表
+		starnode* tmpnode = new starnode(curnodeid,curnode.position_x,curnode.position_y,curnode.position_lt,curnode.position_lc);
 		tmpnode->parent = parentNode;
 		parent[tmpnode->nodeid] = parentNode->nodeid;
 		tmpnode->g = parentNode->g+newedge[g.matrix[parentNode->nodeid][curnodeid]].edgeweightid;
@@ -341,16 +347,6 @@ void Guide::loadMap()
 
 }
 
-int Guide::getIndexStart(double point_x, double point_y) {   //
-    double minv = -1;
-    int ans = -1;
-    for (int i=0; i<g.node_num; i++) {    //Ä£ºýÊäÈë
-        double d = sqrt((newnode[i].position_x-point_x)*(newnode[i].position_x-point_x)+
-                        (newnode[i].position_y-point_y)*(newnode[i].position_y-point_y));
-        if (minv == -1 || d < minv) minv = d, ans = i;
-    }
-    return ans;
-}
 
 void Guide::getLine( list<starnode*> listNode)
  {
@@ -580,6 +576,9 @@ void *Guide::guide(void *arg)
 	int startPoint_index;   //开始节点
 	int endPoint_index;     //目的节点
 
+	double point_xs, point_ys,point_ls;
+    double point_xd, point_yd,point_ld;
+
 	int id;
 	/*while (true){
 		//获取数据    
@@ -627,60 +626,60 @@ void *Guide::guide(void *arg)
               {
                 if (point_ls==point_ld)    //同一层
                    {
-                      startPoint_index = getIndexStart(point_xs, point_ys,point_ls,point_xd, point_yd);   //找最近点
+                      startPoint_index = guide->getIndexStart(point_xs, point_ys,point_ls,point_xd, point_yd);   //找最近点
                       //cout<<startPoint_index <<"start"<<endl;
-     	              endPoint_index = getIndexEnd(point_xs, point_ys,point_ls,point_xd, point_yd);
+     	              endPoint_index = guide->getIndexEnd(point_xs, point_ys,point_ls,point_xd, point_yd);
      	              //cout<<endPoint_index <<"end"<<endl;
-                     dist.clear();
-                     parent.clear();
-                     listNode = searchpath(startPoint_index,endPoint_index);
-                     getLine( listNode) ;
+                     guide->dist.clear();
+                     guide->parent.clear();
+                     listNode = guide->searchpath(startPoint_index,endPoint_index);
+                     guide->getLine( listNode) ;
                      break;
                    }
 
                 else if (point_ls!=point_ld)   //不同一层
                        {
                         int panduan=0;
-                        for ( int i=0;i<g.louti_num; i++)
+                        for ( int i=0;i<(guide->g).louti_num; i++)
                             {
-                              if (newlouti[i].louti_x==point_xs&&newlouti[i].louti_y==point_ys )
+                              if (guide->newlouti[i].louti_x==point_xs&&guide->newlouti[i].louti_y==point_ys )
                                  {
-                                    endPoint_index=newlouti[i].louti_index;
+                                    endPoint_index=guide->newlouti[i].louti_index;
                                     panduan==1;   //X为楼梯,找Y的最近点
-                                    startPoint_index = getIndexStart(point_ys, point_xs,point_ld,point_yd, point_xd);
-                                    dist.clear();
-                                    parent.clear();
-                                    listNode = searchpath(startPoint_index,endPoint_index);
-                                    getLine( listNode) ;
+                                    startPoint_index = guide->getIndexStart(point_ys, point_xs,point_ld,point_yd, point_xd);
+                                    guide->dist.clear();
+                                    guide->parent.clear();
+                                    listNode = guide->searchpath(startPoint_index,endPoint_index);
+                                    guide->getLine( listNode) ;
                                     break;
                                  }
-                             if (newlouti[i].louti_x==point_xd &&newlouti[i].louti_y==point_yd )  //Y为楼梯 ,找x的最近点
+                             if (guide->newlouti[i].louti_x==point_xd &&guide->newlouti[i].louti_y==point_yd )  //Y为楼梯 ,找x的最近点
                                 {
-                                    endPoint_index=newlouti[i].louti_index;
+                                    endPoint_index=guide->newlouti[i].louti_index;
                                     panduan==1;
-                                    startPoint_index = getIndexStart(point_xs, point_ys,point_ls,point_xd, point_yd);
-                                    dist.clear();
-                                    parent.clear();
-                                    listNode = searchpath(startPoint_index,endPoint_index);
-                                    getLine( listNode) ;
+                                    startPoint_index = guide->getIndexStart(point_xs, point_ys,point_ls,point_xd, point_yd);
+                                    guide->dist.clear();
+                                    guide->parent.clear();
+                                    listNode = guide->searchpath(startPoint_index,endPoint_index);
+                                    guide->getLine( listNode) ;
                                     break;
                                 }
                             }
                         if (panduan==0)
                         {
-                            startPoint_index = getIndexStart2(point_xs, point_ys,point_ls);
+                            startPoint_index = guide->getIndexStart2(point_xs, point_ys,point_ls);
                             //cout<<startPoint_index <<"start"<<endl;
-                           int startPoint_index2= getIndexEnd2(point_xd, point_yd,point_ld);
+                           int startPoint_index2= guide->getIndexEnd2(point_xd, point_yd,point_ld);
                           // cout<<startPoint_index2 <<"start2"<<endl;
                            vector <int>v_ele1;
                            vector <int>v_ele2;
-                           for(int i=0;i<g.louti_num; i++)
+                           for(int i=0;i<(guide->g).louti_num; i++)
                               {
-                                if (newlouti[i].louti_lc==point_ls)
-                                   //cout<<newlouti[i].louti_index<<"louti"<<endl;
-                                    v_ele1.push_back(newlouti[i].louti_index);
-                                if (newlouti[i].louti_lc==point_ld)
-                                    v_ele2.push_back(newlouti[i].louti_index);    //定义了楼梯口新节点   楼梯口的序号直接换过了
+                                if (guide->newlouti[i].louti_lc==point_ls)
+                                   //cout<<guide->newlouti[i].louti_index<<"louti"<<endl;
+                                    v_ele1.push_back(guide->newlouti[i].louti_index);
+                                if (guide->newlouti[i].louti_lc==point_ld)
+                                    v_ele2.push_back(guide->newlouti[i].louti_index);    //定义了楼梯口新节点   楼梯口的序号直接换过了
                               }
                          int jj=(int) v_ele2.size();  //
                           //vector<list<starnode*> > v_lis1;
@@ -692,23 +691,23 @@ void *Guide::guide(void *arg)
                    //for循环找多个list
                        for (int ii=0;ii<jj;ii++)
                            {
-                                listNode = searchpath(startPoint_index, v_ele1[ii]);
-                                //getLine( listNode) ;
+                                listNode = guide->searchpath(startPoint_index, v_ele1[ii]);
+                                //guide->getLine( listNode) ;
                                 sum=0;
-                                sum= getSum (listNode );
+                                sum= guide->getSum (listNode );
                                 //cout<<"sum:"<<sum<<endl;
                                 v_sum1.push_back(sum);
 
                                 //v_lis1.push_back(listNode);
-                                //getLine(v_lis1[ii]);
+                                //guide->getLine(v_lis1[ii]);
                                 //listNode.clear();  //????
                           }
 
                     for (int ii=0;ii<jj;ii++)
                         {
-                            listNode = searchpath(startPoint_index2, v_ele2[ii]);
+                            listNode = guide->searchpath(startPoint_index2, v_ele2[ii]);
                             sum=0;
-                            sum=getSum (listNode );
+                            sum=guide->getSum (listNode );
                             //cout<<sum<<"sum2  "<<endl;
                             v_sum2.push_back(sum);
                             //v_lis2.push_back(listNode);
@@ -718,12 +717,12 @@ void *Guide::guide(void *arg)
                     //for(int i=0; i<(int)v_sum2.size();i++){
                     //cout<<v_sum2[i]<<"yuas"<<endl}
 
-                    int i_xuhao= get_Xuhao(v_sum1,v_sum2);
+                    int i_xuhao= guide->get_Xuhao(v_sum1,v_sum2);
                     //cout<<i_xuhao<<"xuhao"<<endl;
-                    listNode = searchpath(startPoint_index, v_ele1[i_xuhao]);
-                    getLine( listNode) ;
-                    listNode = searchpath(startPoint_index2, v_ele2[i_xuhao]);
-                    getLine( listNode) ;//getLine( v_lis2[i_xuhao]) ;
+                    listNode = guide->searchpath(startPoint_index, v_ele1[i_xuhao]);
+                    guide->getLine( listNode) ;
+                    listNode = guide->searchpath(startPoint_index2, v_ele2[i_xuhao]);
+                    guide->getLine( listNode) ;//getLine( v_lis2[i_xuhao]) ;
                     break;
 
               }
