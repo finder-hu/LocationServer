@@ -54,7 +54,7 @@ void MsgQueue::addGuideItem(int id,TcpUser* ptcpuser,const Json::Value &value)
 }
 
 
-int MsgQueue::startGuide(int &id, std::pair<int,int> &sour, std::pair<int,int> &dest)
+int MsgQueue::startGuide(int &id, int &point_xs, int &point_ys,int &point_ls,int &point_xd, int &point_yd, int &point_ld)
 {	
 	if(GuideVec.size() == 0)
 		return -1;
@@ -63,18 +63,24 @@ int MsgQueue::startGuide(int &id, std::pair<int,int> &sour, std::pair<int,int> &
 	id = req.first;
 	Json::Value value = req.second;
 
-	int sx = value["sour"]["x"].asInt();
-	int sy = value["sour"]["y"].asInt();
-	debug("sx:%d,sy:%d",sx,sy);
-	int dx = value["dest"]["x"].asInt();
-	int dy = value["dest"]["y"].asInt();
-	sour = std::make_pair(sx,sy);
-	dest = std::make_pair(dx,dy);
+	point_xs = value["sour"]["x"].asInt();
+	point_ys = value["sour"]["y"].asInt();
+	point_ls = 1;	//for test
+	#if TEST
+	debug("sx:%d,sy:%d,sl:%d",point_xs,point_ys,point_ls);
+	#endif
+	point_xd = value["dest"]["x"].asInt();
+	point_yd = value["dest"]["y"].asInt();
+	point_ld = 2;	//for test
+	#if TEST
+	debug("dx:%d,dy:%d,dl:%d",point_xd,point_yd,point_ld);
 	debug("start Guiding");
+	#endif
 	return 0;
 }
 
 void MsgQueue::finishGuide(int id, const std::vector<std::pair<int,int> > &path)
+
 {
 	auto front = GuideVec.front();
 	if(id != front.first)

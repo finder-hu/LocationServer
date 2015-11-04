@@ -332,9 +332,8 @@ on lab-Lenovo
 
 config.status:864: creating Makefile
 config.status:864: creating main/Makefile
-config.status:864: creating testClient/Makefile
+config.status:864: creating testFunc/Makefile
 config.status:864: creating config.h
-config.status:1045: config.h is unchanged
 config.status:1093: executing depfiles commands
 
 ## ---------------- ##

@@ -55,7 +55,7 @@ public:
 		标，三者都为引用参数
 	返回值：成功返回 0， 没有获得请求则返回 -1
 	*/
-	int startGuide(int &id, std::pair<int,int> &sour, std::pair<int,int> &dest);
+	int startGuide(int &id, int &point_xs, int &point_ys,int &point_ls,int &point_xd, int &point_yd, int &point_ld);
 
 	/*
 	描述：导引完成，通过对比id与导引队列第一个请求的id来判断该用户是否已经断开，

@@ -415,7 +415,7 @@ m4trace:configure.ac:24: -1- AC_DEFINE_TRACE_LITERAL([HAVE_SOCKET])
 m4trace:configure.ac:24: -1- m4_pattern_allow([^HAVE_SOCKET$])
 m4trace:configure.ac:26: -1- AC_CONFIG_FILES([Makefile
                  main/Makefile
-                 testClient/Makefile])
+                 testFunc/Makefile])
 m4trace:configure.ac:29: -1- AC_SUBST([LIB@&t@OBJS], [$ac_libobjs])
 m4trace:configure.ac:29: -1- AC_SUBST_TRACE([LIB@&t@OBJS])
 m4trace:configure.ac:29: -1- m4_pattern_allow([^LIB@&t@OBJS$])

@@ -31,11 +31,15 @@ Guide::Guide(MsgQueue *msgQueue):msgQueue(msgQueue)
 	pthread_t p;
 	if(pthread_create(&p, NULL, guide, this) == -1)
 	{
+		#if TEST
 		debug("create Guide error");
+		#endif
 	}
 	else
 	{
+		#if TEST
 		debug("create Guide success");
+		#endif
 	}
 }
 
@@ -576,8 +580,8 @@ void *Guide::guide(void *arg)
 	int startPoint_index;   //开始节点
 	int endPoint_index;     //目的节点
 
-	double point_xs, point_ys,point_ls;
-    double point_xd, point_yd,point_ld;
+	int point_xs, point_ys,point_ls;
+    int point_xd, point_yd,point_ld;
 
 	int id;
 	/*while (true){
@@ -612,15 +616,15 @@ void *Guide::guide(void *arg)
 	 while (true)
         {    //定义输入输出方式
 
-		   cout << "input 当前位置(包括坐标和楼层)startPoint_index:";
-		   cin >> point_xs >> point_ys>>point_ls;
+		   // cout << "input 当前位置(包括坐标和楼层)startPoint_index:";
+		   // cin >> point_xs >> point_ys>>point_ls;
 
-		   cout << "input 目的位置(包括坐标和楼层)endPoint_index:";
-           cin >> point_xd >> point_yd>>point_ld;
+		   // cout << "input 目的位置(包括坐标和楼层)endPoint_index:";
+     //       cin >> point_xd >> point_yd>>point_ld;
 
         //获取数据    
-		// if((guide->msgQueue)->startGuide(id,sour,dest) == -1)	//no guide request
-		// 	continue;
+		if((guide->msgQueue)->startGuide(id,point_xs, point_ys,point_ls,point_xd, point_yd,point_ld) == -1)	//no guide request
+			continue;
 
            while(1)
               {
@@ -634,10 +638,25 @@ void *Guide::guide(void *arg)
                      guide->parent.clear();
                      listNode = guide->searchpath(startPoint_index,endPoint_index);
                      guide->getLine( listNode) ;
+
+                    //输出结果
+					std::vector<std::pair<int,int> > path;
+			        for (auto it=listNode.begin(); it!=listNode.end(); ++it) 
+			        {
+			        	path.push_back(std::make_pair((*it)->positionx,(*it)->positiony));
+			        }
+					(guide->msgQueue)->finishGuide(id,path);
+
+			        //测试导引时间
+					#if TEST
+			        debug("finish one Guide");
+			   		if(guide->test()==-1)
+			   			cout<<"error in run"<<endl;
+					#endif
                      break;
                    }
 
-                else if (point_ls!=point_ld)   //不同一层
+                else if (point_ls!=point_ld)   //不同一层 
                        {
                         int panduan=0;
                         for ( int i=0;i<(guide->g).louti_num; i++)
@@ -651,6 +670,22 @@ void *Guide::guide(void *arg)
                                     guide->parent.clear();
                                     listNode = guide->searchpath(startPoint_index,endPoint_index);
                                     guide->getLine( listNode) ;
+
+                                    //输出结果
+									std::vector<std::pair<int,int> > path;
+							        for (auto it=listNode.begin(); it!=listNode.end(); ++it) 
+							        {
+							        	path.push_back(std::make_pair((*it)->positionx,(*it)->positiony));
+							        }
+									(guide->msgQueue)->finishGuide(id,path);
+
+							        //测试导引时间
+									#if TEST
+							        debug("finish one Guide");
+							   		if(guide->test()==-1)
+							   			cout<<"error in run"<<endl;
+									#endif
+
                                     break;
                                  }
                              if (guide->newlouti[i].louti_x==point_xd &&guide->newlouti[i].louti_y==point_yd )  //Y为楼梯 ,找x的最近点
@@ -662,6 +697,21 @@ void *Guide::guide(void *arg)
                                     guide->parent.clear();
                                     listNode = guide->searchpath(startPoint_index,endPoint_index);
                                     guide->getLine( listNode) ;
+
+                                    //输出结果
+									std::vector<std::pair<int,int> > path;
+							        for (auto it=listNode.begin(); it!=listNode.end(); ++it) 
+							        {
+							        	path.push_back(std::make_pair((*it)->positionx,(*it)->positiony));
+							        }
+									(guide->msgQueue)->finishGuide(id,path);
+
+							        //测试导引时间
+									#if TEST
+							        debug("finish one Guide");
+							   		if(guide->test()==-1)
+							   			cout<<"error in run"<<endl;
+									#endif
                                     break;
                                 }
                             }
@@ -669,27 +719,27 @@ void *Guide::guide(void *arg)
                         {
                             startPoint_index = guide->getIndexStart2(point_xs, point_ys,point_ls);
                             //cout<<startPoint_index <<"start"<<endl;
-                           int startPoint_index2= guide->getIndexEnd2(point_xd, point_yd,point_ld);
+                           	int startPoint_index2= guide->getIndexEnd2(point_xd, point_yd,point_ld);
                           // cout<<startPoint_index2 <<"start2"<<endl;
-                           vector <int>v_ele1;
-                           vector <int>v_ele2;
-                           for(int i=0;i<(guide->g).louti_num; i++)
-                              {
-                                if (guide->newlouti[i].louti_lc==point_ls)
-                                   //cout<<guide->newlouti[i].louti_index<<"louti"<<endl;
-                                    v_ele1.push_back(guide->newlouti[i].louti_index);
-                                if (guide->newlouti[i].louti_lc==point_ld)
-                                    v_ele2.push_back(guide->newlouti[i].louti_index);    //定义了楼梯口新节点   楼梯口的序号直接换过了
+                           	vector <int>v_ele1;
+                           	vector <int>v_ele2;
+                           	for(int i=0;i<(guide->g).louti_num; i++)
+                              	{
+                                	if (guide->newlouti[i].louti_lc==point_ls)
+                                   	//cout<<guide->newlouti[i].louti_index<<"louti"<<endl;
+                                    	v_ele1.push_back(guide->newlouti[i].louti_index);
+                                	if (guide->newlouti[i].louti_lc==point_ld)
+                                    	v_ele2.push_back(guide->newlouti[i].louti_index);    //定义了楼梯口新节点   楼梯口的序号直接换过了
                               }
-                         int jj=(int) v_ele2.size();  //
-                          //vector<list<starnode*> > v_lis1;
-                          //vector<list<starnode*> > v_lis2;
-                         vector<double> v_sum1;
-                         vector<double> v_sum2;
+                         	int jj=(int) v_ele2.size();  //
+                          	//vector<list<starnode*> > v_lis1;
+                          	//vector<list<starnode*> > v_lis2;
+                         	vector<double> v_sum1;
+                         	vector<double> v_sum2;
 
                  //找开始节点和目的节点的最近点
                    //for循环找多个list
-                       for (int ii=0;ii<jj;ii++)
+                       	for (int ii=0;ii<jj;ii++)
                            {
                                 listNode = guide->searchpath(startPoint_index, v_ele1[ii]);
                                 //guide->getLine( listNode) ;
@@ -703,27 +753,55 @@ void *Guide::guide(void *arg)
                                 //listNode.clear();  //????
                           }
 
-                    for (int ii=0;ii<jj;ii++)
-                        {
-                            listNode = guide->searchpath(startPoint_index2, v_ele2[ii]);
-                            sum=0;
-                            sum=guide->getSum (listNode );
-                            //cout<<sum<<"sum2  "<<endl;
-                            v_sum2.push_back(sum);
-                            //v_lis2.push_back(listNode);
-                            listNode.clear();  //????
-                        }
+	                    for (int ii=0;ii<jj;ii++)
+	                        {
+	                            listNode = guide->searchpath(startPoint_index2, v_ele2[ii]);
+	                            sum=0;
+	                            sum=guide->getSum (listNode );
+	                            //cout<<sum<<"sum2  "<<endl;
+	                            v_sum2.push_back(sum);
+	                            //v_lis2.push_back(listNode);
+	                            listNode.clear();  //????
+	                        }
 
-                    //for(int i=0; i<(int)v_sum2.size();i++){
-                    //cout<<v_sum2[i]<<"yuas"<<endl}
+	                    //for(int i=0; i<(int)v_sum2.size();i++){
+	                    //cout<<v_sum2[i]<<"yuas"<<endl}
 
-                    int i_xuhao= guide->get_Xuhao(v_sum1,v_sum2);
-                    //cout<<i_xuhao<<"xuhao"<<endl;
-                    listNode = guide->searchpath(startPoint_index, v_ele1[i_xuhao]);
-                    guide->getLine( listNode) ;
-                    listNode = guide->searchpath(startPoint_index2, v_ele2[i_xuhao]);
-                    guide->getLine( listNode) ;//getLine( v_lis2[i_xuhao]) ;
-                    break;
+	                    int i_xuhao= guide->get_Xuhao(v_sum1,v_sum2);
+	                    //cout<<i_xuhao<<"xuhao"<<endl;
+	                    listNode = guide->searchpath(startPoint_index, v_ele1[i_xuhao]);
+	                    guide->getLine( listNode) ;
+
+	                     //输出结果
+	                    std::vector<std::pair<int,int> > path;
+				        while(!listNode.empty())
+			        	{
+			        		auto item = listNode.front();
+				        	path.push_back(std::make_pair(item->positionx,item->positiony));
+				        	listNode.pop_front();
+			        	}
+
+	                    listNode = guide->searchpath(startPoint_index2, v_ele2[i_xuhao]);
+	                    guide->getLine( listNode) ;//getLine( v_lis2[i_xuhao]) ;
+
+	                    //输出结果
+	                    listNode.pop_back();
+	                    while(!listNode.empty())
+			        	{
+			        		auto item = listNode.back();
+				        	path.push_back(std::make_pair(item->positionx,item->positiony));
+				        	listNode.pop_back();
+			        	}
+						(guide->msgQueue)->finishGuide(id,path);
+
+				        //测试导引时间
+						#if TEST
+				        debug("finish one Guide");
+				   		if(guide->test()==-1)
+				   			cout<<"error in run"<<endl;
+						#endif
+
+	                    break;
 
               }
 
