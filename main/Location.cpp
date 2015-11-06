@@ -133,11 +133,9 @@ pair<int,int> Location::Locating(const string& rssiInfo){
 	std::map<int,std::vector<string> > curFinger;
 	std::vector<Point> points;
 
-
 	getCurFinger(mac1,mac2,curFinger,points);
         int size = points.size();
         // debug("points size:%d",size);
- 	
 	//test
         points_size.push_back(size);
 
@@ -160,7 +158,7 @@ pair<int,int> Location::Locating(const string& rssiInfo){
  		{
  			map<string, double>rssiMap2 = Util::StringToMap(rssi);
  			double result = Util::MapMatch(currssiMap, rssiMap2,apnum);
- 			if (result>0.9)
+ 			if (result>0.8)
  			{
  			double  weit =  Util::MapMatchW(currssiMap, rssiMap2);
  			int w = (int)weit;
@@ -188,52 +186,13 @@ pair<int,int> Location::Locating(const string& rssiInfo){
 	Point point;	
  	for (int i = 0; i < size; i++) 
  	{
+ 		debug("1111111111111111111");
  		//cout<<"weight:"<<weight[i]<<endl;
- 		point.xposition += points[i].xposition * weight[i]  / sum+0.001	;
- 		point.yposition += points[i].yposition * weight[i]  / sum+0.001;
+ 		point.xposition += points[i].xposition * weight[i]  / (sum+0.001)	;
+ 		point.yposition += points[i].yposition * weight[i]  / (sum+0.001);
  	}
 
-	//cout<<"location:"<<point.xposition<<", "<<point.yposition<<endl;
-/*	
-//knn算法
-	int MaxPointNum[3]={0}; 
-     
-    void sort2(int b[],int NUM) 
-   { 
-    int i=0; 
-    int j=0; 
-    int MaxTemp; 
-    int Record=0; 
-    while(j < 3) 
-    { 
-        MaxTemp=b[0]; 
-        Record=0; 
-        for(i=0; i<NUM; i++) 
-        { 
-            if(b[i]>MaxTemp) 
-            { 
-                Record=i; 
-                MaxTemp=b[i]; 
-            } 
-        } 
-        b[Record]=0; 
-        MaxPointNum[j]=Record; 
-        j++; 
-    } 
-} 
-    sort2(weight,size);
-	for(int i=0; i<3; i++) 
-    { 
-        //cout<<MaxPointNum[i]<<endl; 
-		//cout<<"weight:"<<weight[i]<<endl;
-		point.xposition += points[MaxPointNum[i]].xposition * weight[MaxPointNum[i]]  / weight[MaxPointNum[0]]+weight[MaxPointNum[1]]+weight[MaxPointNum[2]]+0.001	;
-		point.yposition += points[MaxPointNum[i]].yposition * weight[MaxPointNum[i]]  / weight[MaxPointNum[0]]+weight[MaxPointNum[1]]+weight[MaxPointNum[2]]+0.001;
-	}
-
-	//cout<<"location:"<<point.xposition<<", "<<point.yposition<<endl;
-	return point;
-}
-*/
+	debug("22222222222222222");
 
 	return make_pair(point.xposition,point.yposition);
 }
@@ -244,7 +203,7 @@ void Location::getCurFinger(string mac1,string mac2,std::map<int,std::vector<str
 	{
 		auto range = fingers.equal_range(temp->first);
 		string st = (temp->first).substr(0,17);
-
+		// string mac3 = "38:83:45:96:c7:6c" ;||(mac3.compare(st) == 0)
 		if((mac1.compare(st) == 0)||(mac2.compare(st) == 0))
 		{
 			for(auto rangeitem = range.first; rangeitem != range.second; ++rangeitem)
