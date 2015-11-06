@@ -255,7 +255,7 @@ list<starnode*> Guide::searchpath(int startpoint, int endpoint){  // ËÑË÷Â�
 
 void Guide::loadMap()
 {
-	/*ifstream fin("data.txt");
+	ifstream fin("data.txt");
 	string line;
 	getline(fin, line);
 	stringstream linebuf;
@@ -283,8 +283,8 @@ void Guide::loadMap()
 		cout << newnode[i].nodename << " (" << newnode[i].position_x << "," << newnode[i].position_y <<  ")" << endl;
 	    nodeMap.insert(pair<int, node>(newnode[i].m_index, newnode[i]));//ÏòÈÝÆ÷ÖÐ²åÈë½ÚµãÔªËØ
 	}
-	fin.close();*/
-	Database::getGuideData(nodeMap,edgeMap);
+	fin.close();
+	//Database::getGuideData(nodeMap,edgeMap);
 
 }
 
