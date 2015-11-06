@@ -338,23 +338,6 @@ void Guide::loadMap()
     for (int i = 0; i<g.louti_num; i++)
         {   //输出楼梯节点信息
 		getline(fin, line);
-		stringstream nodebuf2;
-		nodebuf2 << line;
-		nodebuf2 >> newlouti[i].louti_index >> newlouti[i].louti_x >> newlouti[i].louti_y >>newlouti[i].louti_lc>> newlouti[i].loutiname;
-	    //cout<<newlouti[i].loutiname<<endl;
-	    //loutiMap.insert(pair<int, louti>(newlouti[i].louti_index, newlouti[i]));//向容器中插入节点元素
-	    }
-	fin.close();
-	cout << "地图载入成功" << endl;
-
-	//Database::getGuideData(nodeMap,edgeMap); 
-
-}
-
-
-void Guide::getLine( list<starnode*> listNode)
- {
-
     if (listNode.empty()==0)
        {
         cout << "the path is ";

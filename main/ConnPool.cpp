@@ -16,7 +16,7 @@ using namespace std;
 using namespace sql;
 
 ConnPool *ConnPool::connPool = NULL;
-const char *DBidentify="tcp://192.168.1.2:3306";
+const char *DBidentify="tcp://127.0.0.1:3306";
 const char *DBuser="root";
 const char *DBpasswd="root123";
 
