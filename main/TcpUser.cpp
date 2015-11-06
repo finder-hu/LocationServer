@@ -61,7 +61,7 @@ int TcpUser::Init()
 void TcpUser::DataHandle(string &data)
 {
     debug("handle data");
-    // debug("handle data %s",data.c_str());
+    debug("handle data %s",data.c_str());
     Json::Reader reader;
     Json::Value value;
     int typecode;
@@ -88,6 +88,7 @@ void TcpUser::DataHandle(string &data)
             // int ret = Database::RegisterHandle(usertel, username, password);   //传用户名到电话号码参数
             Json::Value jRet;
             jRet["typecode"] = ret;
+	debug("ret:%d",ret);
             sendMsg.push(jRet);
             PendingWriteEvt();
             break;

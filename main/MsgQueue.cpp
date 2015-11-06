@@ -65,13 +65,13 @@ int MsgQueue::startGuide(int &id, int &point_xs, int &point_ys,int &point_ls,int
 
 	point_xs = value["sour"]["x"].asInt();
 	point_ys = value["sour"]["y"].asInt();
-	point_ls = 1;	//for test
+	point_ls = value["sour"]["z"].asInt();
 	#if TEST
 	debug("sx:%d,sy:%d,sl:%d",point_xs,point_ys,point_ls);
 	#endif
 	point_xd = value["dest"]["x"].asInt();
 	point_yd = value["dest"]["y"].asInt();
-	point_ld = 2;	//for test
+	point_ld = value["dest"]["z"].asInt();
 	#if TEST
 	debug("dx:%d,dy:%d,dl:%d",point_xd,point_yd,point_ld);
 	debug("start Guiding");

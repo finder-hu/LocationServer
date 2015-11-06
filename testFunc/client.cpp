@@ -10,7 +10,7 @@
 using namespace std;
 using namespace Json;
 
-#define PORT 40000
+#define PORT 40010
 #define IP  "121.49.97.136"
 //#define IP  "192.168.1.108"
 
@@ -34,7 +34,8 @@ int main(void)
 	Value login,regist,changeinf,location,guide;
 	FastWriter writer;
 
-	regist["typecode"] = 9999; 
+	//regist["typecode"] = 9999; 
+	regist["typecode"] = 1;
 	regist["username"] = "finder";
 	regist["password"] = "123";
 	//regist["email"] = "1397812937@qq.com";
