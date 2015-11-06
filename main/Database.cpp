@@ -458,6 +458,8 @@ try{
         v.position_x=rs->getInt(2);
         v.position_y=rs->getInt(3);
         v.m_index=rs->getInt(1);
+        v.position_lt=rs->getInt(6);
+        v.position_lc=rs->getInt(7);
         nodeId=rs->getInt(1);
         nodeMap.insert(make_pair(nodeId,v));
         flag1=1;
