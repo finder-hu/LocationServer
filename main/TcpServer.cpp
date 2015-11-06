@@ -33,7 +33,9 @@ int TcpServer::Init(string ip, int port)
 		return -1;
 	}
 	event_add(serverEvt, NULL);
+	#if TEST
 	debug("init tcpServer success");
+	#endif
 	return 0;
 }
 
@@ -50,7 +52,9 @@ void TcpServer::OffConnection(TcpUser *ptcpUser)
 		if((*user).get() == ptcpUser)
 		{
 			users.erase(user);
+			#if TEST
 			debug("delete an user");
+			#endif
 			return;
 		} 
 	}
@@ -63,7 +67,9 @@ void TcpServer::QuitServer(void)
 
 	event_free(serverEvt);
 	event_base_loopbreak(base);
+	#if TEST
 	debug("quit server");
+	#endif
 }
 
 // void TcpServer::AddEvent(strcut event* evt)
@@ -73,7 +79,9 @@ void TcpServer::QuitServer(void)
 
 void TcpServer::OnAccept(int sock, short what, void *arg)
 {
+	#if TEST
 	debug("accept a client");
+	#endif
 	TcpServer *ptcpServer = (TcpServer*)arg;
 	int client = accept(sock,(struct sockaddr*)NULL, NULL);
 	shared_ptr<TcpUser> user = std::make_shared<TcpUser>(client,ptcpServer);
