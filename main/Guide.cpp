@@ -346,7 +346,6 @@ void Guide::loadMap()
 	    }
 	fin.close();
 	cout << "地图载入成功" << endl;
-
 	//Database::getGuideData(nodeMap,edgeMap); 
 
 }
