@@ -291,73 +291,84 @@ list<starnode*> Guide::searchpath(int startpoint, int endpoint){  // ËÑË÷Â�
 
 void Guide::loadMap()
 {
-	ifstream fin("1015.txt");
-	string line;
-	int num;
-	getline(fin, line);
-	stringstream linebuf;
-	linebuf << line;
+	 ifstream fin("1015.txt");
+  string line;
+  int num;
+  getline(fin, line);
+  stringstream linebuf;
+  linebuf << line;
     while(linebuf>>num)
     {
          g.g_num.push_back(num);
-    }   //得到各楼层节点数
+    }   //µÃµ½¸÷Â¥²ã½ÚµãÊý
     int  num_i=g.g_num.size();
     // for (int j=0;j<num_i;j++)
     //cout<<g.g_num[j]<<endl;
     getline(fin, line);
     stringstream linebuf2;
-	linebuf2 << line;
-	linebuf2 >>  g.edge_num >>g.louti_num;
-	//cout << g.edge_num << ","  <<g.louti_num << endl;   //输出节点数目和边数目
-	for (int i = 0; i < g.edge_num; i++)
-	{     //输出边信息
-		getline(fin, line);
-		stringstream buf;
-		buf << line;
-		buf >> newedge[i].edgeid >> newedge[i].frontnodeid >> newedge[i].lastnodeid >> newedge[i].edgeweightid;
-		//cout << newedge[i].edgeid << ":" << newedge[i].frontnodeid << "," << newedge[i].lastnodeid << "," << newedge[i].edgeweightid << endl;
-		g.matrix[newedge[i].frontnodeid][newedge[i].lastnodeid] = newedge[i].edgeid;    //定义的边的信息
-		edgeMap.insert(pair<int, edge>(newedge[i].edgeid, newedge[i]));
-	}
+  linebuf2 << line;
+  linebuf2 >>  g.edge_num >>g.louti_num;
+  //cout << g.edge_num << ","  <<g.louti_num << endl;   //Êä³ö½ÚµãÊýÄ¿ºÍ±ßÊýÄ¿
+  for (int i = 0; i < g.edge_num; i++)
+  {     //Êä³ö±ßÐÅÏ¢
+    getline(fin, line);
+    stringstream buf;
+    buf << line;
+    buf >> newedge[i].edgeid >> newedge[i].frontnodeid >> newedge[i].lastnodeid >> newedge[i].edgeweightid;
+    //cout << newedge[i].edgeid << ":" << newedge[i].frontnodeid << "," << newedge[i].lastnodeid << "," << newedge[i].edgeweightid << endl;
+    g.matrix[newedge[i].frontnodeid][newedge[i].lastnodeid] = newedge[i].edgeid;    //¶¨ÒåµÄ±ßµÄÐÅÏ¢
+    edgeMap.insert(pair<int, edge>(newedge[i].edgeid, newedge[i]));
+  }
 
    int j=0;
    for (int i=0; i<g.g_num.size(); i++)
    {
        j=j+g.g_num[i];
    }
-	   for (int i = 0; i<j; i++)   //输出节点信息
-		{
-		    getline(fin, line);
-		    stringstream nodebuf;
-		    nodebuf << line;
-		    nodebuf >> newnode[i].m_index >> newnode[i].position_x >> newnode[i].position_y >>newnode[i].position_lt >>newnode[i].position_lc >> newnode[i].nodename;
-		    //cout << newnode[i].nodename << " (" << newnode[i].position_x << "," << newnode[i].position_y << ","<< newnode[i].position_lt<< ","<< newnode[i].position_lc  <<  ")" << endl;
-	        nodeMap.insert(pair<int, node>(newnode[i].m_index, newnode[i]));//向容器中插入节点元素
-	    }
+     for (int i = 0; i<j; i++)   //Êä³ö½ÚµãÐÅÏ¢
+    {
+        getline(fin, line);
+        stringstream nodebuf;
+        nodebuf << line;
+        nodebuf >> newnode[i].m_index >> newnode[i].position_x >> newnode[i].position_y >>newnode[i].position_lt >>newnode[i].position_lc >> newnode[i].nodename;
+        //cout << newnode[i].nodename << " (" << newnode[i].position_x << "," << newnode[i].position_y << ","<< newnode[i].position_lt<< ","<< newnode[i].position_lc  <<  ")" << endl;
+          nodeMap.insert(pair<int, node>(newnode[i].m_index, newnode[i]));//ÏòÈÝÆ÷ÖÐ²åÈë½ÚµãÔªËØ
+      }
 
     for (int i = 0; i<g.louti_num; i++)
-        {   //输出楼梯节点信息
-		getline(fin, line);
-    if (listNode.empty()==0)
-       {
-        cout << "the path is ";
-            for (list<starnode*>::iterator it=listNode.begin(); it!=listNode.end(); ++it)
-               {
-
-                if (parent[(**it).nodeid] != -1)
-                  {
-                   // cout<<newnode[(**it).nodeid].nodename<<"if"<<endl;
-                    cout << "->" << " ("<<newnode[(**it).nodeid].position_x<<","<<newnode[(**it).nodeid].position_y<<") ";  //输出其他点坐标
-                  }
-                else
-                  {
-                    cout << " ("<<newnode[(**it).nodeid].position_x<<","<<newnode[(**it).nodeid].position_y<<") ";   //输出起点坐标
-                  }
-              }
-
-        }
-        cout<<endl;
+        {   //Êä³öÂ¥ÌÝ½ÚµãÐÅÏ¢
+    getline(fin, line);
+    stringstream nodebuf2;
+    nodebuf2 << line;
+    nodebuf2 >> newlouti[i].louti_index >> newlouti[i].louti_x >> newlouti[i].louti_y >>newlouti[i].louti_lc>> newlouti[i].loutiname;
+      //cout<<newlouti[i].loutiname<<endl;
+      //loutiMap.insert(pair<int, louti>(newlouti[i].louti_index, newlouti[i]));//ÏòÈÝÆ÷ÖÐ²åÈë½ÚµãÔªËØ
+      }
+  fin.close();
 }
+
+
+void Guide::getLine( list<starnode*> listNode)
+{
+  if (listNode.empty()==0)
+  {
+    cout << "the path is ";
+    for (list<starnode*>::iterator it=listNode.begin(); it!=listNode.end(); ++it)
+    {
+      if (parent[(**it).nodeid] != -1)
+      {
+       // cout<<newnode[(**it).nodeid].nodename<<"if"<<endl;
+        cout << "->" << " ("<<newnode[(**it).nodeid].position_x<<","<<newnode[(**it).nodeid].position_y<<") ";  //Êä³öÆäËûµã×ø±ê
+      }
+      else
+      {
+        cout << " ("<<newnode[(**it).nodeid].position_x<<","<<newnode[(**it).nodeid].position_y<<") ";   //Êä³öÆðµã×ø±ê
+      }
+    }
+  }
+  cout<<endl;
+}
+
 
 int Guide::getIndexStart2(double point_xs, double point_ys,int point_ls )
 {

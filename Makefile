@@ -188,22 +188,13 @@ distuninstallcheck_listfiles = find . -type f -print
 am__distuninstallcheck_listfiles = $(distuninstallcheck_listfiles) \
   | sed 's|^\./|$(prefix)/|' | grep -v '$(infodir)/dir$$'
 distcleancheck_listfiles = find . -type f -print
-<<<<<<< HEAD
-ACLOCAL = ${SHELL} /usr/finder/hlh/run/missing aclocal-1.14
+ACLOCAL = ${SHELL} /home/finder/hlh/LocationServer/missing aclocal-1.14
 AMTAR = $${TAR-tar}
 AM_DEFAULT_VERBOSITY = 1
-AUTOCONF = ${SHELL} /usr/finder/hlh/run/missing autoconf
-AUTOHEADER = ${SHELL} /usr/finder/hlh/run/missing autoheader
-AUTOMAKE = ${SHELL} /usr/finder/hlh/run/missing automake-1.14
-=======
-ACLOCAL = ${SHELL} /usr/finder/cg/LocationServer/missing aclocal-1.14
-AMTAR = $${TAR-tar}
-AM_DEFAULT_VERBOSITY = 1
-AUTOCONF = ${SHELL} /usr/finder/cg/LocationServer/missing autoconf
-AUTOHEADER = ${SHELL} /usr/finder/cg/LocationServer/missing autoheader
-AUTOMAKE = ${SHELL} /usr/finder/cg/LocationServer/missing automake-1.14
->>>>>>> cg
-AWK = mawk
+AUTOCONF = ${SHELL} /home/finder/hlh/LocationServer/missing autoconf
+AUTOHEADER = ${SHELL} /home/finder/hlh/LocationServer/missing autoheader
+AUTOMAKE = ${SHELL} /home/finder/hlh/LocationServer/missing automake-1.14
+AWK = gawk
 CC = gcc
 CCDEPMODE = depmode=gcc3
 CFLAGS = -g -O2
@@ -230,11 +221,7 @@ LDFLAGS =
 LIBOBJS = 
 LIBS = 
 LTLIBOBJS = 
-<<<<<<< HEAD
-MAKEINFO = ${SHELL} /usr/finder/hlh/run/missing makeinfo
-=======
-MAKEINFO = ${SHELL} /usr/finder/cg/LocationServer/missing makeinfo
->>>>>>> cg
+MAKEINFO = ${SHELL} /home/finder/hlh/LocationServer/missing makeinfo
 MKDIR_P = /bin/mkdir -p
 OBJEXT = o
 PACKAGE = server
@@ -247,20 +234,13 @@ PACKAGE_VERSION = VERSION
 PATH_SEPARATOR = :
 RANLIB = ranlib
 SET_MAKE = 
-SHELL = /bin/bash
+SHELL = /bin/sh
 STRIP = 
 VERSION = 1.0
-<<<<<<< HEAD
-abs_builddir = /usr/finder/hlh/run
-abs_srcdir = /usr/finder/hlh/run
-abs_top_builddir = /usr/finder/hlh/run
-abs_top_srcdir = /usr/finder/hlh/run
-=======
-abs_builddir = /usr/finder/cg/LocationServer
-abs_srcdir = /usr/finder/cg/LocationServer
-abs_top_builddir = /usr/finder/cg/LocationServer
-abs_top_srcdir = /usr/finder/cg/LocationServer
->>>>>>> cg
+abs_builddir = /home/finder/hlh/LocationServer
+abs_srcdir = /home/finder/hlh/LocationServer
+abs_top_builddir = /home/finder/hlh/LocationServer
+abs_top_srcdir = /home/finder/hlh/LocationServer
 ac_ct_CC = gcc
 ac_ct_CXX = g++
 am__include = include
@@ -280,11 +260,7 @@ host_alias =
 htmldir = ${docdir}
 includedir = ${prefix}/include
 infodir = ${datarootdir}/info
-<<<<<<< HEAD
-install_sh = ${SHELL} /usr/finder/hlh/run/install-sh
-=======
-install_sh = ${SHELL} /usr/finder/cg/LocationServer/install-sh
->>>>>>> cg
+install_sh = ${SHELL} /home/finder/hlh/LocationServer/install-sh
 libdir = ${exec_prefix}/lib
 libexecdir = ${exec_prefix}/libexec
 localedir = ${datarootdir}/locale

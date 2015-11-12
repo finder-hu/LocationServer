@@ -21,8 +21,9 @@
 #define TEST 1
 
 //服务器的IP和端口号
-//#define IP "192.168.1.2"
-#define IP "121.49.97.136"
+//#define IP "192.168.1.2"  //kb127
+//#define IP "121.49.97.136"	//kb127
+#define IP "192.168.1.142"	//kb115
 #define PORT 40010
 
 

@@ -11,7 +11,7 @@ using namespace std;
 using namespace Json;
 
 #define PORT 40010
-#define IP  "121.49.97.136"
+#define IP  "192.168.1.142"
 //#define IP  "192.168.1.108"
 
 void senddata(string &msg, int client);
@@ -34,8 +34,8 @@ int main(void)
 	Value login,regist,changeinf,location,guide;
 	FastWriter writer;
 
-	//regist["typecode"] = 9999; 
-	regist["typecode"] = 1;
+	regist["typecode"] = 9999; 
+	//regist["typecode"] = 1;
 	regist["username"] = "finder";
 	regist["password"] = "123";
 	//regist["email"] = "1397812937@qq.com";
@@ -56,11 +56,13 @@ int main(void)
 	// temp["y"] = 7193;
 	temp["x"] = 542;
 	temp["y"] = 337;
+	temp["z"] = 1;
 	guide["sour"] = temp;
 	// temp["x"] = 3966;
 	// temp["y"] = 5560;
 	temp["x"] = 542;
 	temp["y"] = 313;
+	temp["z"] = 2;
 	guide["dest"] = temp;
 
 	string strregist = writer.write(regist);
