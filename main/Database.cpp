@@ -578,7 +578,7 @@ int Database::recordUserPosition(string &username, int positionX, int positionY)
         //找不到用户，证明该用户是第一次进行定位历史记录,直接插入信息
         if(flag == false) {
             //cout<<"hml"<<endl;
-            sql = "INSERT INTO UserHistory(uuid,usertel,username,positionX, positionY, path,pathNum,loginNum,date,time) VALUES(uuid(),?, ?, ?,?,?,?,?,NOW(),NOW())";
+            sql = "INSERT INTO UserHistory(uuid,usertel,username,positionX, positionY, path,pathNum,loginNum,date,time,positionZ) VALUES(uuid(),?, ?, ?,?,?,?,?,NOW(),CURTIME(),?)";
             
             pstmt = conn->prepareStatement(sql);
             
@@ -590,7 +590,7 @@ int Database::recordUserPosition(string &username, int positionX, int positionY)
             pstmt->setInt(5, 1);
             pstmt->setInt(6,1);
             pstmt->setInt(7,loginNum);
-           
+            PSTMT->setInt(8,2)
             if( pstmt->executeUpdate()>0)
             {
               cout<<"creat a new userHistory"<<endl;
@@ -638,7 +638,7 @@ int Database::recordUserPosition(string &username, int positionX, int positionY)
            if(distance>=100)
             {
                 cout<<username<<endl;
-                sql = "INSERT INTO UserHistory(uuid,usertel,username, positionX, positionY, path,pathNum,loginNum,date,time) VALUES(uuid(),?, ?, ?,?,?,?,?,NOW(),NOW())";
+                sql = "INSERT INTO UserHistory(uuid,usertel,username, positionX, positionY, path,pathNum,loginNum,date,time,positionZ) VALUES(uuid(),?, ?, ?,?,?,?,?,NOW(),NOW(,?)";
                 pstmt = conn->prepareStatement(sql);
                 pstmt->setString(1, usertel);
                 pstmt->setString(2,username);
@@ -647,6 +647,7 @@ int Database::recordUserPosition(string &username, int positionX, int positionY)
                 pstmt->setInt(5, path);
                 pstmt->setInt(6,pathNum);
                 pstmt->setInt(7,loginNum);
+                pstmt->setInt(8,2);
                 pstmt->executeUpdate();
                 cout<<"succeed memory in previous record"<<endl;
                 typecode=402;
@@ -760,6 +761,7 @@ try{
             {
                 data.push_back(rs->getString(10));
                 data.push_back(rs->getString(11));
+                endTime=rs->getString(11);
                 
             }
             if(rs->getInt(8)>=maxPathNum)
@@ -773,7 +775,7 @@ try{
             vector<string>pathPosition;
             pathPosition.push_back(strX);
             roadPathOut.str("");
-            strX=roadPathOut.str();
+           // strX=roadPathOut.str();
             roadPathOut<<rs->getInt(5);
             strY=roadPathOut.str();
             pathPosition.push_back(strY);
