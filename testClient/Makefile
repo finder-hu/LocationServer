@@ -1,5 +1,5 @@
 client: main.o TcpClient.o DBConnpool.o
-	g++ -o client main.o TcpClient.o DBConnpool.o -lmysqlcppconn -ljson -std=c++0x
+	g++ -o client main.o TcpClient.o DBConnpool.o -lmysqlcppconn -ljson -std=c++11
 main.o: main.cpp TcpClient.h DBConnpool.h define.h
 	g++ -c main.cpp
 TcpClient.o: TcpClient.cpp TcpClient.h define.h

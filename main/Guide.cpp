@@ -49,7 +49,7 @@ Guide::~Guide()
 	parent.clear();
 
 	#if TEST
-	record();
+	RecordTime();
 	#endif
 }
 void Guide::initGraph(Graph& g){   // ³õÊ¼»¯µØÍ¼ -1£¬ ÊýÖµ´ú±í±ßid
@@ -616,37 +616,43 @@ void *Guide::guide(void *arg)
 		   // cout << "input 目的位置(包括坐标和楼层)endPoint_index:";
      //       cin >> point_xd >> point_yd>>point_ld;
 
-        //获取数据    
+    //获取数据    
 		if((guide->msgQueue)->startGuide(id,point_xs, point_ys,point_ls,point_xd, point_yd,point_ld) == -1)	//no guide request
 			continue;
+ 
+    //记录导引开始时间
+    guide->StartTime();
 
-           while(1)
-              {
-                if (point_ls==point_ld)    //同一层
-                   {
-                      startPoint_index = guide->getIndexStart(point_xs, point_ys,point_ls,point_xd, point_yd);   //找最近点
-                      //cout<<startPoint_index <<"start"<<endl;
-     	              endPoint_index = guide->getIndexEnd(point_xs, point_ys,point_ls,point_xd, point_yd);
-     	              //cout<<endPoint_index <<"end"<<endl;
-                     guide->dist.clear();
-                     guide->parent.clear();
-                     listNode = guide->searchpath(startPoint_index,endPoint_index);
-                     guide->getLine( listNode) ;
+    //开始导引
+    while(1)
+    {
+        if (point_ls==point_ld)    //同一层
+        {
+            startPoint_index = guide->getIndexStart(point_xs, point_ys,point_ls,point_xd, point_yd);   //找最近点
+            //cout<<startPoint_index <<"start"<<endl;
+              endPoint_index = guide->getIndexEnd(point_xs, point_ys,point_ls,point_xd, point_yd);
+              //cout<<endPoint_index <<"end"<<endl;
+            guide->dist.clear();
+            guide->parent.clear();
+            listNode = guide->searchpath(startPoint_index,endPoint_index);
+            guide->getLine( listNode) ;
 
-                    //输出结果
-					std::vector<std::pair<int,int> > path;
-			        for (auto it=listNode.begin(); it!=listNode.end(); ++it) 
-			        {
-			        	path.push_back(std::make_pair((*it)->positionx,(*it)->positiony));
-			        }
-					(guide->msgQueue)->finishGuide(id,path);
+            //输出结果
+  	        std::vector<std::pair<int,int> > path;
+            for (auto it=listNode.begin(); it!=listNode.end(); ++it) 
+            {
+        	     path.push_back(std::make_pair((*it)->positionx,(*it)->positiony));
+            }
+
+            //结束导引
+		        (guide->msgQueue)->finishGuide(id,path);
 
 			        //测试导引时间
-					#if TEST
-			        debug("finish one Guide");
-			   		if(guide->test()==-1)
-			   			cout<<"error in run"<<endl;
-					#endif
+        		#if TEST
+                debug("finish one Guide");
+           		if(guide->EndTime()==-1)
+           			cout<<"error in run"<<endl;
+        		#endif
                      break;
                    }
 
@@ -676,7 +682,7 @@ void *Guide::guide(void *arg)
 							        //测试导引时间
 									#if TEST
 							        debug("finish one Guide");
-							   		if(guide->test()==-1)
+							   		if(guide->EndTime()==-1)
 							   			cout<<"error in run"<<endl;
 									#endif
 
@@ -703,7 +709,7 @@ void *Guide::guide(void *arg)
 							        //测试导引时间
 									#if TEST
 							        debug("finish one Guide");
-							   		if(guide->test()==-1)
+							   		if(guide->EndTime()==-1)
 							   			cout<<"error in run"<<endl;
 									#endif
                                     break;
@@ -791,7 +797,7 @@ void *Guide::guide(void *arg)
 				        //测试导引时间
 						#if TEST
 				        debug("finish one Guide");
-				   		if(guide->test()==-1)
+				   		if(guide->EndTime()==-1)
 				   			cout<<"error in run"<<endl;
 						#endif
 
@@ -807,34 +813,48 @@ void *Guide::guide(void *arg)
 }
 
 
-int Guide::test(void)
+
+int Guide::StartTime(void)
 {
-	struct timeval tv;
-	if(gettimeofday(&tv,(struct timezone*)NULL)==-1)
-	{
-		perror("in Guide::test, gettimeofday");
-		return -1;
-	}
-	guideDuring.push_back(tv);
-	receiveBufSize.push_back(msgQueue->getGuideNum());	
-	return 0;
+  struct timeval tv;
+  if(gettimeofday(&tv,(struct timezone*)NULL)==-1)
+  {
+    perror("in Location::test, gettimeofday");
+    return -1;
+  }
+  startTime.push_back(tv);
+  receiveBufSize.push_back(msgQueue->getLocateNum()); 
+
 }
 
-void Guide::record(void)
+int Guide::EndTime(void)
+{
+  struct timeval tv;
+  if(gettimeofday(&tv,(struct timezone*)NULL)==-1)
+  {
+    perror("in Location::test, gettimeofday");
+    return -1;
+  }
+  endTime.push_back(tv);
+
+}
+
+
+void Guide::RecordTime(void)
 {
 	ofstream out;
-	out.open("timeOfGuide.txt");
-	if(guideDuring.size() != receiveBufSize.size())
+	out.open("./testData/GuideTime.txt");
+	if(startTime.size() != receiveBufSize.size())
 	{
 		cout<<"size of guideDuring , receiveBufSize and sendBufsize are not same!"<<endl;
 		return;
 	}
-	int dur;
+	double dur;
 	out<<"   dur         receiveBufSize"<<endl;
-	for(size_t a = 0;a<guideDuring.size()-1;++a)
+	for(size_t a = 0;a<startTime.size()-1;++a)
 	{
-		dur = (guideDuring[a+1].tv_sec - guideDuring[a].tv_sec)*1000000
-			+ guideDuring[a+1].tv_usec - guideDuring[a].tv_usec;
+    dur = endTime[a].tv_sec - startTime[a].tv_sec +
+          (endTime[a].tv_usec - startTime[a].tv_usec)* 1e-6;
 		out<<dur<<"us          "<<receiveBufSize[a]<<"items"<<endl;
 	}
 	out.close();

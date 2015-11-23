@@ -38,11 +38,11 @@ using namespace Json;
 
 
 //extern ConnPool *pool;
-#define TESTDURATION 1  	//设置每个客户端运行的时间,单位秒
-#define CLIENTNUM 500   	//设置需要模拟的客户端数目
+#define TESTDURATION 5  	//设置每个客户端运行的时间,单位秒
+#define CLIENTNUM 1	   	//设置需要模拟的客户端数目
 #define PERIODSENDMSGSEC 1	//设置报文发送的时间间隔-秒
 #define PERIODSENDMSGUSEC 0	//设置报文发送的时间间隔-毫秒
-#define LOCATION 1
+#define LOCATION 1		//1 for location, 0 for guide
 #define SENDTIMES ((int)(TESTDURATION/(PERIODSENDMSGSEC+PERIODSENDMSGUSEC/1000000.0)))
 
 #define MAX_LINE (SENDTIMES*20+1)

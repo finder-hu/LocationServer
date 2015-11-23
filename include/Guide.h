@@ -101,8 +101,9 @@ public:
 	
 	static void* guide(void* arg);
 
-	int test(void);
-	void record(void);
+	int StartTime(void);
+	int EndTime(void);
+	void RecordTime(void);
 
 private:
 	MsgQueue *msgQueue;
@@ -127,7 +128,8 @@ private:
 	 * 用来测试导引时间，guideDuring记录每次从请求队列里取出请求时的时间。
 	 *receiveBufSize记录此时的请求队列里数据的个数。 
 	 */
-	vector<struct timeval> guideDuring;
+	vector<struct timeval> startTime;
+	vector<struct timeval> endTime;
 	vector<int> receiveBufSize;
 
 };

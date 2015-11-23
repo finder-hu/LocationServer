@@ -71,20 +71,40 @@ public:
 
 
 	/**
-	 * 描述：获取当前时间并存放于locateDuring中，获取定位qq队列中当前请求
-	 * 的个数并存于receiveBufSize中，获取该用户目前返回队列里数据的个数，并
-	 * 存于sendBufsize中。并把当前定位的位置加入到loc_record中。
+	 * 描述：把当前定位的位置加入到loc_record中。
 	 * 输入：x :x坐标， y:y坐标 
 	 * 输出：0 --成功，-1 --失败
 	 */
-	int test(int x,int y);
-	
+	int Precision(int x,int y);
 
 
 	/**
-	 * 记录测试到的数据，包括时间，剩余请求数。
+	 * @brief 记录开始时间
+	 * @details 把开始定位时间加入到startTime中,获取定位qq队列中当前请求
+	 * 的个数并存于receiveBufSize中
+	 * @return 0
 	 */
-	void record(void);
+	int StartTime(void);
+	
+
+	/**
+	 * @brief 记录结束时间
+	 * @details 把时间加入到endTime中
+	 * @return 0
+	 */
+	int EndTime(void);
+
+
+	/**
+	 * 记录精度测试数据。
+	 */
+	void RecordPrecision(void);
+
+	/**
+	 * @brief 记录定位时间
+	 * @details 开始时间减去结束时间
+	 */
+	void RecordTime(void);
 
 
 private:
@@ -99,13 +119,18 @@ private:
 	 * 用来测试定位时间，locateDuring记录每次从请求队列里取出请求时的时间。
 	 *receiveBufSize记录此时的请求队列里数据的个数。 
 	 */
-	vector<struct timeval> locateDuring;
+	vector<struct timeval> startTime;
+	vector<struct timeval> endTime;
 	vector<int> receiveBufSize;
 
 	/**
 	 * 记录定位精度，第一个为X，第二个为y;
 	 */
 	std::vector<std::pair<int,int> > loc_record;
+
+	/**
+	 * 
+	 */
 	std::vector<int> points_size;
 	std::vector<int> matchcount;
 };

@@ -357,8 +357,9 @@ void TcpUser::OnWrite(int sock, short what, void *arg)
         bool ret = (ptcpUser->msgQueue).getMsg(ptcpUser->id,jMsg);
         if(ret)
         {
-            if(jMsg["typecode"].asInt() == 1540)
-            int ret = Database::recordUserPosition(ptcpUser->username, jMsg["x"].asInt(), jMsg["y"].asInt());
+            int ret = 0;
+            if((jMsg["typecode"].asInt() == 1540)&& !(ptcpUser->username).empty())
+                ret = Database::recordUserPosition(ptcpUser->username, jMsg["x"].asInt(), jMsg["y"].asInt());
             if(ret != 402)
             {
                 debug("record user positin error");

@@ -58,7 +58,8 @@ void Location::init(void)
 Location::~Location()
 {
 #if TEST
-	record(); //记录测试结果
+	RecordPrecision();	//记录定位精度
+	RecordTime(); 		//记录定位时间
 #endif
 }
 
@@ -79,21 +80,21 @@ void* Location::run(void *arg)
    		//获取待定位数据
         if((thislo->msgQueue)->startLoc(id,rssi) == -1)
             continue;
-      
+ 		
+ 		#if TEST
+ 		thislo->StartTime();
+ 		#endif
         //定位
         pair<int,int> ret = thislo->Locating(rssi);
 
-        //定位结果
+        //测试定位时间
         #if TEST
         debug("after locate");
+		thislo->EndTime();
+		thislo->Precision(ret.first,ret.second);
         #endif
+        //定位结果
         (thislo->msgQueue)->finishLoc(id,make_tuple(ret.first,ret.second,2));
-        
-        //测试定位时间
-		#if TEST
-   		if(thislo->test(ret.first,ret.second)==-1)
-   			cout<<"error in run"<<endl;
-		#endif
     }
 }
 
@@ -196,13 +197,10 @@ pair<int,int> Location::Locating(const string& rssiInfo){
 	Point point;	
  	for (int i = 0; i < size; i++) 
  	{
- 		debug("1111111111111111111");
  		//cout<<"weight:"<<weight[i]<<endl;
  		point.xposition += points[i].xposition * weight[i]  / (sum+0.001)	;
  		point.yposition += points[i].yposition * weight[i]  / (sum+0.001);
  	}
-
-	debug("22222222222222222");
 
 	return make_pair(point.xposition,point.yposition);
 }
@@ -259,7 +257,13 @@ void Location::getCurFinger(string mac1,string mac2,std::map<int,std::vector<str
 	// }
 }
 
-int Location::test(int x,int y)
+int Location::Precision(int x,int y)
+{
+	loc_record.push_back(std::make_pair(x,y));
+	return 0;
+}
+
+int Location::StartTime(void)
 {
 	struct timeval tv;
 	if(gettimeofday(&tv,(struct timezone*)NULL)==-1)
@@ -267,36 +271,56 @@ int Location::test(int x,int y)
 		perror("in Location::test, gettimeofday");
 		return -1;
 	}
-	locateDuring.push_back(tv);
+	startTime.push_back(tv);
 	receiveBufSize.push_back(msgQueue->getLocateNum());	
 
-	loc_record.push_back(std::make_pair(x,y));
-	return 0;
 }
 
-void Location::record(void)
+int Location::EndTime(void)
+{
+	struct timeval tv;
+	if(gettimeofday(&tv,(struct timezone*)NULL)==-1)
+	{
+		perror("in Location::test, gettimeofday");
+		return -1;
+	}
+	endTime.push_back(tv);
+
+}
+
+void Location::RecordPrecision(void)
 {
 	ofstream out;
-	out.open("timeOfLocation.txt");
-	if(locateDuring.size() != receiveBufSize.size())
-	{
-		cout<<"size of locateDuring , receiveBufSize and sendBufsize are not same!"<<endl;
-		return;
-	}
-	int dur;
-	out<<"   dur         receiveBufSize"<<endl;
-	for(size_t a = 0;a<locateDuring.size()-1;++a)
-	{
-		dur = (locateDuring[a+1].tv_sec - locateDuring[a].tv_sec)*1000000
-			+ locateDuring[a+1].tv_usec - locateDuring[a].tv_usec;
-		out<<dur<<"us          "<<receiveBufSize[a]<<"items"<<endl;
-	}
-	out.close();
-
-	out.open("jindu.txt");
+	out.open("./testData/Precision.txt");
 	for(int i=0;i<(int)loc_record.size();++i)
 	{
 		out<<i+1<<"	"<<loc_record[i].first<<"	"<<loc_record[i].second<<\
 		"	"<<points_size[i]<<"	"<<matchcount[i]<<endl;
 	}
+	out.close();
+}
+
+void Location::RecordTime(void)
+{
+	ofstream out;
+	out.open("./testData/LocationTime.txt");
+
+	out.unsetf(ios::fixed);              //取消按点输出显示    
+    out.precision(6);                   //精度为18，正常为6  
+
+	if(startTime.size() != receiveBufSize.size())
+	{
+		cout<<"size of locateDuring , receiveBufSize and sendBufsize are not same!"<<endl;
+		return;
+	}
+	double dur = 0.0;
+	out<<"   dur         receiveBufSize"<<endl;
+	for(size_t a = 0;a<startTime.size()-1;++a)
+	{
+		dur = endTime[a].tv_sec-startTime[a].tv_sec + 
+		(endTime[a].tv_usec - startTime[a].tv_usec) * 1e-6;
+		out<<dur<<"us          "<<receiveBufSize[a]<<" items"<<endl;
+	}
+	out.close();
+	
 }

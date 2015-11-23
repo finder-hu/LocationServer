@@ -590,7 +590,7 @@ int Database::recordUserPosition(string &username, int positionX, int positionY)
             pstmt->setInt(5, 1);
             pstmt->setInt(6,1);
             pstmt->setInt(7,loginNum);
-            PSTMT->setInt(8,2)
+            pstmt->setInt(8,2);
             if( pstmt->executeUpdate()>0)
             {
               cout<<"creat a new userHistory"<<endl;
