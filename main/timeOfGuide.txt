@@ -1,5 +1,0 @@
-   dur         receiveBufSize
-1636382us          0items
-742341us          0items
-548332us          0items
-487247us          0items
