@@ -1,3 +1,0 @@
-TcpServer-Point.o: Point.cpp ../include/Point.h
-
-../include/Point.h:
