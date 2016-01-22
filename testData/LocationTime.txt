@@ -1,3 +1,0 @@
-   dur         receiveBufSize
-0.304386us          1 items
-0.303295us          1 items

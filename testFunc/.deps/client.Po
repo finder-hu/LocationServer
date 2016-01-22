@@ -1,4 +1,5 @@
-client.o: client.cpp /usr/local/include/c++/4.9.2/iostream \
+client.o: client.cpp /usr/include/stdc-predef.h \
+ /usr/local/include/c++/4.9.2/iostream \
  /usr/local/include/c++/4.9.2/x86_64-unknown-linux-gnu/bits/c++config.h \
  /usr/local/include/c++/4.9.2/x86_64-unknown-linux-gnu/bits/os_defines.h \
  /usr/include/features.h /usr/include/sys/cdefs.h \
@@ -40,13 +41,15 @@ client.o: client.cpp /usr/local/include/c++/4.9.2/iostream \
  /usr/include/ctype.h /usr/include/bits/types.h \
  /usr/include/bits/typesizes.h /usr/include/endian.h \
  /usr/include/bits/endian.h /usr/include/bits/byteswap.h \
+ /usr/include/bits/byteswap-16.h \
  /usr/local/include/c++/4.9.2/bits/ios_base.h \
  /usr/local/include/c++/4.9.2/ext/atomicity.h \
  /usr/local/include/c++/4.9.2/x86_64-unknown-linux-gnu/bits/gthr.h \
  /usr/local/include/c++/4.9.2/x86_64-unknown-linux-gnu/bits/gthr-default.h \
  /usr/include/pthread.h /usr/include/sched.h /usr/include/time.h \
  /usr/include/bits/sched.h /usr/include/bits/time.h \
- /usr/include/bits/pthreadtypes.h /usr/include/bits/setjmp.h \
+ /usr/include/bits/timex.h /usr/include/bits/pthreadtypes.h \
+ /usr/include/bits/setjmp.h \
  /usr/local/include/c++/4.9.2/x86_64-unknown-linux-gnu/bits/atomic_word.h \
  /usr/local/include/c++/4.9.2/bits/locale_classes.h \
  /usr/local/include/c++/4.9.2/string \
@@ -99,14 +102,18 @@ client.o: client.cpp /usr/local/include/c++/4.9.2/iostream \
  /usr/include/sys/types.h /usr/include/sys/select.h \
  /usr/include/bits/select.h /usr/include/bits/sigset.h \
  /usr/include/sys/sysmacros.h /usr/include/bits/uio.h \
- /usr/include/bits/socket.h /usr/include/bits/sockaddr.h \
- /usr/include/asm/socket.h /usr/include/asm-generic/socket.h \
- /usr/include/asm/sockios.h /usr/include/asm-generic/sockios.h \
- /usr/include/arpa/inet.h /usr/include/netinet/in.h \
+ /usr/include/bits/socket.h /usr/include/bits/socket_type.h \
+ /usr/include/bits/sockaddr.h /usr/include/asm/socket.h \
+ /usr/include/asm-generic/socket.h /usr/include/asm/sockios.h \
+ /usr/include/asm-generic/sockios.h /usr/include/arpa/inet.h \
+ /usr/include/netinet/in.h \
  /usr/local/lib/gcc/x86_64-unknown-linux-gnu/4.9.2/include/stdint.h \
  /usr/include/stdint.h /usr/include/bits/in.h /usr/include/stdlib.h \
  /usr/include/bits/waitflags.h /usr/include/bits/waitstatus.h \
- /usr/include/alloca.h
+ /usr/include/alloca.h /usr/include/bits/stdlib-bsearch.h \
+ /usr/include/bits/stdlib-float.h
+
+/usr/include/stdc-predef.h:
 
 /usr/local/include/c++/4.9.2/iostream:
 
@@ -212,6 +219,8 @@ client.o: client.cpp /usr/local/include/c++/4.9.2/iostream \
 
 /usr/include/bits/byteswap.h:
 
+/usr/include/bits/byteswap-16.h:
+
 /usr/local/include/c++/4.9.2/bits/ios_base.h:
 
 /usr/local/include/c++/4.9.2/ext/atomicity.h:
@@ -229,6 +238,8 @@ client.o: client.cpp /usr/local/include/c++/4.9.2/iostream \
 /usr/include/bits/sched.h:
 
 /usr/include/bits/time.h:
+
+/usr/include/bits/timex.h:
 
 /usr/include/bits/pthreadtypes.h:
 
@@ -362,6 +373,8 @@ client.o: client.cpp /usr/local/include/c++/4.9.2/iostream \
 
 /usr/include/bits/socket.h:
 
+/usr/include/bits/socket_type.h:
+
 /usr/include/bits/sockaddr.h:
 
 /usr/include/asm/socket.h:
@@ -389,3 +402,7 @@ client.o: client.cpp /usr/local/include/c++/4.9.2/iostream \
 /usr/include/bits/waitstatus.h:
 
 /usr/include/alloca.h:
+
+/usr/include/bits/stdlib-bsearch.h:
+
+/usr/include/bits/stdlib-float.h:
