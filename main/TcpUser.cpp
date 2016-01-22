@@ -295,7 +295,8 @@ int TcpUser::MyRead(string &str) const
             if(recv(sock_fd,data,len,0) == len)
             {
                 str = data;
-                return 0;
+		debug(str.c_str());         
+      		 return 0;
             }
         }
     }
@@ -354,15 +355,19 @@ void TcpUser::OnWrite(int sock, short what, void *arg)
     }
     else
     {
-        bool ret = (ptcpUser->msgQueue).getMsg(ptcpUser->id,jMsg);
-        if(ret)
+        bool recv = (ptcpUser->msgQueue).getMsg(ptcpUser->id,jMsg);
+        if(recv)
         {
             int ret = 0;
             if((jMsg["typecode"].asInt() == 1540)&& !(ptcpUser->username).empty())
                 ret = Database::recordUserPosition(ptcpUser->username, jMsg["x"].asInt(), jMsg["y"].asInt());
-            if(ret != 402)
+            if(ret == 400 || ret==402)
             {
-                debug("record user positin error");
+                debug("record user positin success");
+            }else if(ret==403){
+                debug("the distance is smaller,don't record");
+            }else{
+                debug("record user position error");
             }
             strdata = writer.write(jMsg);
             ptcpUser->MyWrite(strdata);

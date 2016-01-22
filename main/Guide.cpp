@@ -853,8 +853,8 @@ void Guide::RecordTime(void)
 	out<<"   dur         receiveBufSize"<<endl;
 	for(size_t a = 0;a<startTime.size()-1;++a)
 	{
-    dur = endTime[a].tv_sec - startTime[a].tv_sec +
-          (endTime[a].tv_usec - startTime[a].tv_usec)* 1e-6;
+    dur = (endTime[a].tv_sec - startTime[a].tv_sec)*1e+6 +
+          (endTime[a].tv_usec - startTime[a].tv_usec);
 		out<<dur<<"us          "<<receiveBufSize[a]<<"items"<<endl;
 	}
 	out.close();

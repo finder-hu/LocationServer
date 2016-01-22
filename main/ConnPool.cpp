@@ -50,7 +50,7 @@ ConnPool *ConnPool::GetInstance() {
     cout<<"DBConnpool::GetInstance()"<<endl;
     if(connPool == NULL)
     {
-        connPool = new ConnPool(DBidentify,DBuser,DBpasswd,20);
+        connPool = new ConnPool(DBidentify,DBuser,DBpasswd,40);
     }
     return connPool;
 }

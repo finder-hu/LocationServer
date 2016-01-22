@@ -10,7 +10,7 @@
 using namespace std;
 using namespace Json;
 
-#define PORT 40010
+#define PORT 40001
 #define IP  "192.168.1.142"
 //#define IP  "192.168.1.108"
 

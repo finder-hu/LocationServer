@@ -24,9 +24,9 @@
 //#define IP "192.168.1.2"  //kb127
 //#define IP "121.49.97.136"	//kb127
 #define IP "192.168.1.142"	//kb115
-#define PORT 40010	//running
+//#define PORT 40010	//running
 //#define PORT 40001	//cg	
-//#define PORT 40002	//hlh
+#define PORT 40001	//hlh
 //#define PORT 40003	//hml
 
 

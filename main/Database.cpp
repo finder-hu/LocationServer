@@ -507,13 +507,12 @@ int Database::recordUserPosition(string &username, int positionX, int positionY)
         int typecode;
         string usertel;
         PreparedStatement *pstmt ;
-        PreparedStatement *pstmt1;
         Connection *conn = pool->GetConnection();
-        Connection *conn1 = pool->GetConnection();
+        
         
         //conn->setAutoCommit(false);
         conn->setSchema("project");
-        conn1->setSchema("project");
+        
         string sql = "SELECT * FROM UserHistory WHERE username=? or usertel=?";
         pstmt = conn->prepareStatement(sql);
         pstmt->setString(1, username);
@@ -545,10 +544,10 @@ int Database::recordUserPosition(string &username, int positionX, int positionY)
         //username select
         cout<<"maxPath="<<maxPath<<endl;
         string sql1 = "SELECT * FROM users WHERE username=? or usertel=?";
-        pstmt1 = conn1->prepareStatement(sql1);
-        pstmt1->setString(1,username);
-        pstmt1->setString(2,username);
-        rs=pstmt1->executeQuery();
+        pstmt = conn->prepareStatement(sql1);
+        pstmt->setString(1,username);
+        pstmt->setString(2,username);
+        rs=pstmt->executeQuery();
         if(rs->next())
         {
 
@@ -556,7 +555,7 @@ int Database::recordUserPosition(string &username, int positionX, int positionY)
             username=rs->getString(3);
             loginNum=rs->getInt(9);
             iflogin=rs->getInt(8);
-          //  cout<<"iflogin="<<iflogin<<endl;
+            cout<<"iflogin="<<iflogin<<endl;
         }
 
          if(iflogin!=1)
@@ -568,18 +567,18 @@ int Database::recordUserPosition(string &username, int positionX, int positionY)
             typecode=401;
             rs->close();
         delete pstmt;
-        delete pstmt1;
+       
         pool->ReleaseConnection(conn);
-        pool->ReleaseConnection(conn1);
+        
  
         return typecode;
 
         }
         //找不到用户，证明该用户是第一次进行定位历史记录,直接插入信息
         if(flag == false) {
-            //cout<<"hml"<<endl;
+            //cout<<"hml new user"<<endl;
             sql = "INSERT INTO UserHistory(uuid,usertel,username,positionX, positionY, path,pathNum,loginNum,date,time,positionZ) VALUES(uuid(),?, ?, ?,?,?,?,?,NOW(),CURTIME(),?)";
-            
+           //cout<<"hml new user"<<endl; 
             pstmt = conn->prepareStatement(sql);
             
 
@@ -599,12 +598,13 @@ int Database::recordUserPosition(string &username, int positionX, int positionY)
 
             }
         else{
-            //cout<<"hml"<<endl;
+           // cout<<"hml old user"<<endl;
             sql="SELECT * FROM UserHistory WHERE path=? and username=?";
-            pstmt1=conn1->prepareStatement(sql);
-            pstmt1->setInt(1,path);
-            pstmt1->setString(2,username);
-            rs=pstmt1->executeQuery();
+            //cout<<"hml old user"<<endl;
+            pstmt=conn->prepareStatement(sql);
+            pstmt->setInt(1,path);
+            pstmt->setString(2,username);
+            rs=pstmt->executeQuery();
             while (rs->next())
             {
                 if(rs->getInt(8)>=maxPathNum)
@@ -638,7 +638,7 @@ int Database::recordUserPosition(string &username, int positionX, int positionY)
            if(distance>=100)
             {
                 cout<<username<<endl;
-                sql = "INSERT INTO UserHistory(uuid,usertel,username, positionX, positionY, path,pathNum,loginNum,date,time,positionZ) VALUES(uuid(),?, ?, ?,?,?,?,?,NOW(),NOW(,?)";
+                sql = "INSERT INTO UserHistory(uuid,usertel,username, positionX, positionY, path,pathNum,loginNum,date,time,positionZ) VALUES(uuid(),?, ?, ?,?,?,?,?,NOW(),NOW(),?";
                 pstmt = conn->prepareStatement(sql);
                 pstmt->setString(1, usertel);
                 pstmt->setString(2,username);
@@ -666,9 +666,9 @@ int Database::recordUserPosition(string &username, int positionX, int positionY)
 
         rs->close();
         delete pstmt;
-        delete pstmt1;
+       
         pool->ReleaseConnection(conn);
-        pool->ReleaseConnection(conn1);
+        
  
         return typecode;
     } catch (SQLException &e) {
